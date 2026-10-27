@@ -1,0 +1,22 @@
+# Java / Maven
+target/
+.mvn/wrapper/maven-wrapper.jar
+*.class
+
+# Node / Angular
+node_modules/
+dist/
+.angular/
+npm-debug.log
+yarn-error.log
+
+# IDE
+.idea/
+*.iml
+.settings/
+.classpath
+.project
+
+# OS
+.DS_Store
+Thumbs.db

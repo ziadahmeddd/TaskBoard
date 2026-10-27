@@ -1,0 +1,70 @@
+<div class="kanban-container">
+  <header class="header">
+    <h1>Kanban Task Board</h1>
+    <p>Spring Boot 3 + Angular CDK Drag & Drop</p>
+  </header>
+
+  <!-- Create Task Form -->
+  <section class="task-form-card">
+    <form (ngSubmit)="createTask()" class="form-row">
+      <input
+        type="text"
+        placeholder="Task title..."
+        [(ngModel)]="newTask.title"
+        name="title"
+        required
+      />
+      <input
+        type="text"
+        placeholder="Description (optional)"
+        [(ngModel)]="newTask.description"
+        name="description"
+      />
+      <select [(ngModel)]="newTask.priority" name="priority">
+        <option value="LOW">LOW</option>
+        <option value="MEDIUM">MEDIUM</option>
+        <option value="HIGH">HIGH</option>
+        <option value="CRITICAL">CRITICAL</option>
+      </select>
+      <button type="submit" [disabled]="!newTask.title.trim()">Add Task</button>
+    </form>
+  </section>
+
+  <!-- Kanban Columns Grid -->
+  <main class="board-grid" cdkDropListGroup>
+    @for (col of columns; track col.status) {
+      <div class="column">
+        <div class="column-header">
+          <h2>{{ col.title }}</h2>
+          <span class="count-badge">{{ getListByStatus(col.status).length }}</span>
+        </div>
+
+        <div
+          cdkDropList
+          [cdkDropListData]="getListByStatus(col.status)"
+          (cdkDropListDropped)="onDrop($event, col.status)"
+          class="card-list"
+        >
+          @for (task of getListByStatus(col.status); track task.id) {
+            <article class="task-card" cdkDrag>
+              <div class="card-top">
+                <span class="priority-badge" [attr.data-priority]="task.priority">
+                  {{ task.priority }}
+                </span>
+                <button (click)="deleteTask(task.id)" class="delete-btn" title="Delete task">
+                  &times;
+                </button>
+              </div>
+              <h3 class="task-title">{{ task.title }}</h3>
+              @if (task.description) {
+                <p class="task-desc">{{ task.description }}</p>
+              }
+            </article>
+          } @empty {
+            <div class="empty-placeholder">No tasks in this lane</div>
+          }
+        </div>
+      </div>
+    }
+  </main>
+</div>
